@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class LegendOfTheGreatLake {
 
     public static final String MODID = "legendofthegreatlake";
+    public static final String SKIN_NS = "legendofthegreatlakeskin";
 
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();

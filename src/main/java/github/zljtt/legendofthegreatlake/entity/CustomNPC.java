@@ -91,7 +91,7 @@ public class CustomNPC extends Villager {
 
     public ResourceLocation getSkinTextureLocation() {
         if (this.entityData.get(SKIN_NAME).matches("^[-a-z0-9._]+")) {
-            return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/" + this.entityData.get(SKIN_NAME) + ".png");
+            return new ResourceLocation(LegendOfTheGreatLake.SKIN_NS, "textures/npc/" + this.entityData.get(SKIN_NAME) + ".png");
         }
         return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/custom_npc.png");
     }
