@@ -1,12 +1,14 @@
 package github.zljtt.legendofthegreatlake;
 
 import com.mojang.logging.LogUtils;
+import github.zljtt.legendofthegreatlake.entity.CustomNPC;
 import github.zljtt.legendofthegreatlake.entity.EntityRegistry;
 import github.zljtt.legendofthegreatlake.gui.ContainerRegistry;
 import github.zljtt.legendofthegreatlake.items.ItemRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -69,7 +71,13 @@ public class LegendOfTheGreatLake {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        LOGGER.info("Server Starting...");
+    }
+
+    @SubscribeEvent
+    public void addEntityAttributes(EntityAttributeCreationEvent event) {
+        LegendOfTheGreatLake.LOGGER.debug("Register attributes");
+        event.put(EntityRegistry.CUSTOM_NPC.get(), CustomNPC.setAttributes());
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD

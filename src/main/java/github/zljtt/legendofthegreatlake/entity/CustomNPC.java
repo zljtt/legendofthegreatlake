@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.npc.Villager;
@@ -20,6 +23,14 @@ public class CustomNPC extends Villager {
         super(type, level);
     }
 
+    public static AttributeSupplier setAttributes() {
+        return Villager.createAttributes()
+                .add(Attributes.MAX_HEALTH, 20)
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.ARMOR, 2)
+                .build();
+    }
+
     @Override
     protected Brain<?> makeBrain(Dynamic<?> p_35445_) {
         Brain<Villager> brain = this.brainProvider().makeBrain(p_35445_);
@@ -28,9 +39,9 @@ public class CustomNPC extends Villager {
     }
 
     @Override
-    public void refreshBrain(ServerLevel p_35484_) {
+    public void refreshBrain(ServerLevel level) {
         Brain<Villager> brain = this.getBrain();
-        brain.stopAll(p_35484_, this);
+        brain.stopAll(level, this);
         this.brain = brain.copyWithoutBehaviors();
         this.registerBrainGoals(this.getBrain());
     }
@@ -60,5 +71,9 @@ public class CustomNPC extends Villager {
         brain.setActiveActivityIfPossible(Activity.IDLE);
         brain.updateActivityFromSchedule(this.level.getDayTime(), this.level.getGameTime());
         LegendOfTheGreatLake.LOGGER.debug("Custom npc AI generated");
+    }
+
+    public ResourceLocation getSkinTextureLocation() {
+        return new ResourceLocation("entity/custom_npc");
     }
 }
