@@ -24,7 +24,7 @@ public class ScheduledEvent extends Item {
         LegendOfTheGreatLake.LOGGER.debug("on use");
         context.getItemInHand().getCapability(ScheduledEventDataProvider.SCHEDULED_EVENT_DATA_CAPABILITY).ifPresent(data -> {
             data.setEventPosition(context.getClickedPos());
-            context.getItemInHand().setHoverName(new TextComponent(eventType.toString() + " - " +
+            context.getItemInHand().setHoverName(new TextComponent(eventType.toString() + " at " +
                     context.getClickedPos().getX() + " " +
                     context.getClickedPos().getY() + " " +
                     context.getClickedPos().getZ()));

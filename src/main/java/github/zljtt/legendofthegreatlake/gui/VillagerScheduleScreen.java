@@ -40,7 +40,7 @@ public class VillagerScheduleScreen extends AbstractContainerScreen<VillagerSche
 
     @Override
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        drawString(stack, this.font, this.title, this.leftPos + 8, this.topPos + 3, 0x404040);
+        //drawString(stack, this.font, this.title, this.leftPos + 8, this.topPos + 3, 0x404040);
         //drawString(stack, this.font, this.playerInventoryTitle, this.leftPos + 8, this.leftPos + 80, 0x404040);
     }
 
