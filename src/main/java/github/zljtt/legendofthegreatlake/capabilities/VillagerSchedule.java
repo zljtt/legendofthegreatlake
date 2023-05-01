@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 public class VillagerSchedule implements IItemHandlerModifiable, IVillagerSchedule {
 
     protected NonNullList<ItemStack> stacks;
+    protected String imageFileName;
 
 
     public VillagerSchedule() {
@@ -27,6 +28,16 @@ public class VillagerSchedule implements IItemHandlerModifiable, IVillagerSchedu
 
     public void setStacks(NonNullList<ItemStack> list) {
         stacks = list;
+    }
+
+    @Override
+    public String getImageName() {
+        return imageFileName;
+    }
+
+    @Override
+    public void setImageName(String name) {
+        imageFileName = name;
     }
 
     @Override

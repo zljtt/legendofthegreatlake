@@ -1,12 +1,9 @@
 package github.zljtt.legendofthegreatlake.entity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import github.zljtt.legendofthegreatlake.entity.CustomNPC;
 import github.zljtt.legendofthegreatlake.entity.model.CustomNPCModel;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -15,10 +12,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.BeeStingerLayer;
-import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +24,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 
@@ -41,18 +35,19 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
 
     public CustomNPCRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, new CustomNPCModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
-        this.addLayer(new HumanoidArmorLayer<>(this,
-                new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
-
+        /**
+         this.addLayer(new HumanoidArmorLayer<>(this,
+         new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
+         **/
         //this.addLayer(new PlayerItemInHandLayer<>(this));
         //this.addLayer(new ArrowLayer<>(context, this));
         //this.addLayer(new Deadmau5EarsLayer(this));
         //this.addLayer(new CapeLayer(this));
-        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
-        this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
+        //this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
+        //this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
         //this.addLayer(new ParrotOnShoulderLayer<>(this, context.getModelSet()));
         //this.addLayer(new SpinAttackEffectLayer<>(this, context.getModelSet()));
-        this.addLayer(new BeeStingerLayer<>(this));
+        //this.addLayer(new BeeStingerLayer<>(this));
     }
 
     public void render(CustomNPC npc, float p_117789_, float p_117790_, PoseStack p_117791_, MultiBufferSource p_117792_, int p_117793_) {
@@ -60,10 +55,11 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
         super.render(npc, p_117789_, p_117790_, p_117791_, p_117792_, p_117793_);
     }
 
-    public Vec3 getRenderOffset(CustomNPC p_117785_, float p_117786_) {
-        return p_117785_.isCrouching() ? new Vec3(0.0D, -0.125D, 0.0D) : super.getRenderOffset(p_117785_, p_117786_);
-    }
-
+    /**
+     * public Vec3 getRenderOffset(CustomNPC p_117785_, float p_117786_) {
+     * return p_117785_.isCrouching() ? new Vec3(0.0D, -0.125D, 0.0D) : super.getRenderOffset(p_117785_, p_117786_);
+     * }
+     **/
     private void setModelProperties(CustomNPC npc) {
         CustomNPCModel<CustomNPC> npcModel = this.getModel();
         if (npc.isSpectator()) {
@@ -132,18 +128,20 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
         }
     }
 
-    public ResourceLocation getTextureLocation(CustomNPC npc) {
+    public @NotNull ResourceLocation getTextureLocation(CustomNPC npc) {
         return npc.getSkinTextureLocation();
     }
 
-    protected void scale(CustomNPC npc, PoseStack p_117799_, float p_117800_) {
+    protected void scale(CustomNPC npc, PoseStack stack, float p_117800_) {
         float f = 0.9375F;
-        p_117799_.scale(0.9375F, 0.9375F, 0.9375F);
+        stack.scale(0.9375F, 0.9375F, 0.9375F);
     }
 
     protected void renderNameTag(CustomNPC npc, Component component, PoseStack stack, MultiBufferSource buffer, int p_117812_) {
-        double d0 = this.entityRenderDispatcher.distanceToSqr(npc);
-        stack.pushPose();
+        /**
+         double d0 = this.entityRenderDispatcher.distanceToSqr(npc);
+         stack.pushPose();
+         **/
         /**
          if (d0 < 100.0D) {
          Scoreboard scoreboard = npc.getScoreboard();
@@ -155,20 +153,22 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
          }
          }
          **/
-        float f = npc.getBbHeight() + 0.5F;
-        int i = "deadmau5".equals(component.getString()) ? -10 : 0;
-        stack.pushPose();
-        stack.translate(0.0D, (double) f, 0.0D);
-        stack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        stack.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = stack.last().pose();
-        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int j = (int) (f1 * 255.0F) << 24;
-        Font font = this.getFont();
-        float f2 = (float) (-font.width(component) / 2);
-        font.drawInBatch(component, f2, (float) i, 553648127, false, matrix4f, buffer, true, j, p_117812_);
-        font.drawInBatch(component, f2, (float) i, -1, false, matrix4f, buffer, false, 0, p_117812_);
-        stack.popPose();
+        /**
+         float f = npc.getBbHeight() + 0.5F;
+         int i = "deadmau5".equals(component.getString()) ? -10 : 0;
+         stack.pushPose();
+         stack.translate(0.0D, (double) f, 0.0D);
+         stack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+         stack.scale(-0.025F, -0.025F, 0.025F);
+         Matrix4f matrix4f = stack.last().pose();
+         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+         int j = (int) (f1 * 255.0F) << 24;
+         Font font = this.getFont();
+         float f2 = (float) (-font.width(component) / 2);
+         font.drawInBatch(component, f2, (float) i, 553648127, false, matrix4f, buffer, true, j, p_117812_);
+         font.drawInBatch(component, f2, (float) i, -1, false, matrix4f, buffer, false, 0, p_117812_);
+         stack.popPose();
+         **/
     }
 
     public void renderRightHand(PoseStack stack, MultiBufferSource buffer, int p_117773_, CustomNPC npc) {

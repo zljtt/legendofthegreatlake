@@ -4,6 +4,10 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +23,10 @@ import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.level.Level;
 
 public class CustomNPC extends Villager {
+
+    private static final EntityDataAccessor<String> SKIN_NAME =
+            SynchedEntityData.defineId(CustomNPC.class, EntityDataSerializers.STRING);
+
     public CustomNPC(EntityType<? extends Villager> type, Level level) {
         super(type, level);
     }
@@ -36,6 +44,14 @@ public class CustomNPC extends Villager {
         Brain<Villager> brain = this.brainProvider().makeBrain(p_35445_);
         this.registerBrainGoals(brain);
         return brain;
+    }
+
+    public void setSkinName(String name) {
+        this.entityData.set(SKIN_NAME, name);
+    }
+
+    public String GetSkinName() {
+        return this.entityData.get(SKIN_NAME);
     }
 
     @Override
@@ -74,6 +90,29 @@ public class CustomNPC extends Villager {
     }
 
     public ResourceLocation getSkinTextureLocation() {
-        return new ResourceLocation("entity/custom_npc");
+        if (this.entityData.get(SKIN_NAME).matches("^[-a-z0-9._]+")) {
+            return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/" + this.entityData.get(SKIN_NAME) + ".png");
+        }
+        return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/custom_npc.png");
     }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        String name = tag.getString("SkinName");
+        this.entityData.set(SKIN_NAME, name.isEmpty() ? "custom_npc" : name);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putString("SkinName", this.entityData.get(SKIN_NAME));
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SKIN_NAME, "custom_npc");
+    }
+
 }

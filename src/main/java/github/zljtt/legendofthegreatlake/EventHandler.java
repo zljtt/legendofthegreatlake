@@ -2,7 +2,6 @@ package github.zljtt.legendofthegreatlake;
 
 import github.zljtt.legendofthegreatlake.capabilities.*;
 import github.zljtt.legendofthegreatlake.entity.CustomNPC;
-import github.zljtt.legendofthegreatlake.entity.EntityRegistry;
 import github.zljtt.legendofthegreatlake.entity.VillagerModifiedAI;
 import github.zljtt.legendofthegreatlake.gui.VillagerScheduleContainer;
 import github.zljtt.legendofthegreatlake.items.ItemRegistry;
@@ -21,7 +20,6 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -35,10 +33,16 @@ public class EventHandler {
     public static void openVillagerScheduler(PlayerInteractEvent.EntityInteract event) {
         if (!event.getWorld().isClientSide && event.getTarget() instanceof Villager villager && event.getPlayer().getItemInHand(event.getHand()).getItem() == ItemRegistry.DEBUG_STICK.get()) {
             villager.getCapability(VillagerScheduleProvider.VILLAGER_SCHEDULE_CAPABILITY).ifPresent((slots) -> {
+                villager.setPersistenceRequired();
                 MenuProvider container = new SimpleMenuProvider(VillagerScheduleContainer.getServerContainer(villager, slots), new TextComponent("Scheduler"));
                 NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
                 event.setResult(Event.Result.DENY);
             });
+        }
+        if (event.getTarget() instanceof CustomNPC npc && event.getPlayer().getItemInHand(event.getHand()).getItem() == ItemRegistry.SKIN_TAG.get()) {
+            npc.setSkinName(event.getPlayer().getItemInHand(event.getHand()).getHoverName().getString());
+            LegendOfTheGreatLake.LOGGER.debug("Set to name " + event.getPlayer().getItemInHand(event.getHand()).getHoverName().getString());
+            LegendOfTheGreatLake.LOGGER.debug(npc.getStringUUID() + " " + npc.GetSkinName());
         }
     }
 
@@ -72,11 +76,6 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void addEntityAttributes(EntityAttributeCreationEvent event) {
-        LegendOfTheGreatLake.LOGGER.debug("Register attributes");
-        event.put(EntityRegistry.CUSTOM_NPC.get(), CustomNPC.setAttributes());
-    }
 
     @SubscribeEvent
     public static void transformVillager(EntityJoinWorldEvent event) {

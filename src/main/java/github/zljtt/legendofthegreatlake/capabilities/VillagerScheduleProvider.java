@@ -48,6 +48,7 @@ public class VillagerScheduleProvider implements ICapabilitySerializable<Compoun
             getSchedule().getStacks().get(i).save(itemTag);
             nbtTagList.put(VillagerSchedule.TimeSlot.values()[i].toString(), itemTag);
         }
+        //nbtTagList.putString("Skin", getSchedule().getImageName());
         CompoundTag nbt = new CompoundTag();
         nbt.put("Schedule", nbtTagList);
         return nbt;
@@ -62,7 +63,8 @@ public class VillagerScheduleProvider implements ICapabilitySerializable<Compoun
             CompoundTag itemTag = tagList.getCompound(VillagerSchedule.TimeSlot.values()[i].toString());
             getSchedule().getStacks().set(i, ItemStack.of(itemTag));
         }
-
+        //String name = tagList.getString("Skin");
+        //getSchedule().setImageName(name.equals("") ? "custom_npc" : name);
     }
 
 }

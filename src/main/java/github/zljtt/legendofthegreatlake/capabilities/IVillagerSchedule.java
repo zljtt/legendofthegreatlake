@@ -10,4 +10,8 @@ public interface IVillagerSchedule extends IItemHandler {
 
     void setStacks(NonNullList<ItemStack> list);
 
+    String getImageName();
+
+    void setImageName(String name);
+
 }

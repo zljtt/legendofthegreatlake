@@ -49,7 +49,7 @@ public class LegendOfTheGreatLake {
 
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
-        LOGGER.info("COMMON SETUP");
+        LOGGER.info("COMMON SETUP starting");
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -74,11 +74,6 @@ public class LegendOfTheGreatLake {
         LOGGER.info("Server Starting...");
     }
 
-    @SubscribeEvent
-    public void addEntityAttributes(EntityAttributeCreationEvent event) {
-        LegendOfTheGreatLake.LOGGER.debug("Register attributes");
-        event.put(EntityRegistry.CUSTOM_NPC.get(), CustomNPC.setAttributes());
-    }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
@@ -88,6 +83,12 @@ public class LegendOfTheGreatLake {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // Register a new block here
             LOGGER.info("HELLO from Register Block");
+        }
+
+        @SubscribeEvent
+        public static void addEntityAttributes(final EntityAttributeCreationEvent event) {
+            LegendOfTheGreatLake.LOGGER.info("Register attributes");
+            event.put(EntityRegistry.CUSTOM_NPC.get(), CustomNPC.setAttributes());
         }
     }
 }
