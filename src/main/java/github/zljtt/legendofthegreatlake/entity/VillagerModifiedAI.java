@@ -26,6 +26,7 @@ import net.minecraft.world.entity.schedule.ScheduleBuilder;
 import net.minecraft.world.item.ItemStack;
 
 public class VillagerModifiedAI {
+    public static float RUN_MODIFIER = 1.2f;
 
     public static void updateVillagerSchedule(Villager villager) {
         villager.getCapability(VillagerScheduleProvider.VILLAGER_SCHEDULE_CAPABILITY).ifPresent(slots -> {
@@ -87,7 +88,7 @@ public class VillagerModifiedAI {
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getCorePackage(float speedModifier) {
         return ImmutableList.of(
                 Pair.of(0, new Swim(0.8F)),
-                Pair.of(0, new InteractWithDoor()),
+                Pair.of(0, new InteractWithModdedDoors()),
                 Pair.of(0, new LookAtTargetSink(45, 90)),
                 Pair.of(0, new VillagerPanicTrigger()),
                 Pair.of(0, new WakeUp()),
@@ -126,9 +127,9 @@ public class VillagerModifiedAI {
                         Pair.of(new StrollToPoiList(MemoryModuleType.SECONDARY_JOB_SITE, speedModifier, 1, 6, MemoryModuleType.JOB_SITE), 5),
                         Pair.of(new HarvestFarmland(), profession == VillagerProfession.FARMER ? 2 : 5),
                         Pair.of(new UseBonemeal(), profession == VillagerProfession.FARMER ? 4 : 7)))),
-                Pair.of(10, new ShowTradesToPlayer(400, 1600)),
+                //Pair.of(10, new ShowTradesToPlayer(400, 1600)),
                 Pair.of(10, new SetLookAndInteract(EntityType.PLAYER, 4)),
-                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.JOB_SITE, speedModifier, 9, 100, 1200)),
+                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.JOB_SITE, speedModifier * RUN_MODIFIER, 9, 100, 1200)),
                 Pair.of(99, new UpdateActivityFromSchedule()));
     }
 
@@ -138,7 +139,7 @@ public class VillagerModifiedAI {
                 getFullLookBehavior(),
                 Pair.of(5, new PlayTagWithOtherKids()),
                 Pair.of(5, new RunOne<>(ImmutableMap.of(MemoryModuleType.VISIBLE_VILLAGER_BABIES, MemoryStatus.VALUE_ABSENT), ImmutableList.of(
-                        Pair.of(InteractWith.of(EntityType.VILLAGER, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 2),
+                        Pair.of(InteractWith.of(EntityRegistry.CUSTOM_NPC.get(), 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 2),
                         Pair.of(InteractWith.of(EntityType.CAT, 8, MemoryModuleType.INTERACTION_TARGET, speedModifier, 2), 1),
                         Pair.of(new VillageBoundRandomStroll(speedModifier), 1),
                         Pair.of(new SetWalkTargetFromLookTarget(speedModifier, 2), 1),
@@ -149,12 +150,12 @@ public class VillagerModifiedAI {
 
     public static ImmutableList<Pair<Integer, ? extends Behavior<? super Villager>>> getRestPackage(float speedModifier) {
         return ImmutableList.of(
-                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.HOME, speedModifier, 1, 150, 1200)),
+                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.HOME, speedModifier * RUN_MODIFIER, 1, 150, 1200)),
                 //Pair.of(3, new ValidateNearbyPoi(PoiType.HOME, MemoryModuleType.HOME)),
                 Pair.of(3, new SleepInBed()),
                 Pair.of(5, new RunOne<>(ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_ABSENT), ImmutableList.of(
                         //Pair.of(new SetClosestHomeAsWalkTarget(speedModifier), 1),
-                        //Pair.of(new InsideBrownianWalk(speedModifier), 4),
+                        Pair.of(new InsideBrownianWalk(speedModifier), 4),
                         //Pair.of(new GoToClosestVillage(speedModifier, 4), 2),
                         Pair.of(new DoNothing(20, 40), 2)))),
                 getMinimalLookBehavior(),
@@ -166,10 +167,10 @@ public class VillagerModifiedAI {
                 Pair.of(2, new RunOne<>(ImmutableList.of(
                         Pair.of(new StrollAroundPoi(MemoryModuleType.MEETING_POINT, 0.4F, 40), 2),
                         Pair.of(new SocializeAtBell(), 2)))),
-                Pair.of(10, new ShowTradesToPlayer(400, 1600)),
+                //Pair.of(10, new ShowTradesToPlayer(400, 1600)),
                 Pair.of(10, new SetLookAndInteract(EntityType.PLAYER, 4)),
-                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.MEETING_POINT, speedModifier, 6, 100, 200)),
-                Pair.of(3, new GiveGiftToHero(100)),
+                Pair.of(2, new SetWalkTargetFromBlockMemory(MemoryModuleType.MEETING_POINT, speedModifier * RUN_MODIFIER, 6, 100, 200)),
+                //Pair.of(3, new GiveGiftToHero(100)),
                 //Pair.of(3, new ValidateNearbyPoi(PoiType.MEETING, MemoryModuleType.MEETING_POINT)),
                 Pair.of(3, new GateBehavior<>(ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET), GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE, ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
                 getFullLookBehavior(),
@@ -188,7 +189,7 @@ public class VillagerModifiedAI {
                         Pair.of(new DoNothing(30, 60), 1)))),
                 //Pair.of(3, new GiveGiftToHero(100)),
                 Pair.of(3, new SetLookAndInteract(EntityType.PLAYER, 4)),
-                Pair.of(3, new ShowTradesToPlayer(400, 1600)),
+                //Pair.of(3, new ShowTradesToPlayer(400, 1600)),
                 Pair.of(3, new GateBehavior<>(ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.INTERACTION_TARGET), GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE, ImmutableList.of(Pair.of(new TradeWithVillager(), 1)))),
                 Pair.of(3, new GateBehavior<>(ImmutableMap.of(), ImmutableSet.of(MemoryModuleType.BREED_TARGET), GateBehavior.OrderPolicy.ORDERED, GateBehavior.RunningPolicy.RUN_ONE, ImmutableList.of(Pair.of(new VillagerMakeLove(), 1)))),
                 getFullLookBehavior(),

@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.Level;
 
 public class CustomNPC extends Villager {
 
-    private static final EntityDataAccessor<String> SKIN_NAME =
+    private static final EntityDataAccessor<String> NPC_NAME =
             SynchedEntityData.defineId(CustomNPC.class, EntityDataSerializers.STRING);
 
     public CustomNPC(EntityType<? extends Villager> type, Level level) {
@@ -33,8 +34,8 @@ public class CustomNPC extends Villager {
 
     public static AttributeSupplier setAttributes() {
         return Villager.createAttributes()
-                .add(Attributes.MAX_HEALTH, 20)
-                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.MAX_HEALTH, 100)
+                .add(Attributes.MOVEMENT_SPEED, 0.5)
                 .add(Attributes.ARMOR, 2)
                 .build();
     }
@@ -46,12 +47,16 @@ public class CustomNPC extends Villager {
         return brain;
     }
 
-    public void setSkinName(String name) {
-        this.entityData.set(SKIN_NAME, name);
+    public void setCustomNPCName(String name) {
+        this.entityData.set(NPC_NAME, name);
     }
 
-    public String GetSkinName() {
-        return this.entityData.get(SKIN_NAME);
+    public String getCustomNPCName() {
+        return this.entityData.get(NPC_NAME);
+    }
+
+    public TranslatableComponent getTranslatedName() {
+        return new TranslatableComponent("npc." + this.entityData.get(NPC_NAME) + ".name");
     }
 
     @Override
@@ -77,7 +82,7 @@ public class CustomNPC extends Villager {
         brain.addActivity(Activity.CORE, VillagerModifiedAI.getCorePackage(0.5F));
         brain.addActivityWithConditions(Activity.MEET, VillagerModifiedAI.getMeetPackage(0.5F), ImmutableSet.of(Pair.of(MemoryModuleType.MEETING_POINT, MemoryStatus.VALUE_PRESENT)));
         brain.addActivity(Activity.REST, VillagerModifiedAI.getRestPackage(0.5F));
-        brain.addActivity(Activity.IDLE, VillagerModifiedAI.getIdlePackage(0.5F));
+        brain.addActivity(Activity.IDLE, VillagerModifiedAI.getIdlePackage(0.25F));
         brain.addActivity(Activity.PANIC, VillagerModifiedAI.getPanicPackage(0.5F));
         brain.addActivity(Activity.PRE_RAID, VillagerModifiedAI.getPreRaidPackage(0.5F));
         brain.addActivity(Activity.RAID, VillagerModifiedAI.getRaidPackage(0.5F));
@@ -90,8 +95,8 @@ public class CustomNPC extends Villager {
     }
 
     public ResourceLocation getSkinTextureLocation() {
-        if (this.entityData.get(SKIN_NAME).matches("^[-a-z0-9._]+")) {
-            return new ResourceLocation(LegendOfTheGreatLake.SKIN_NS, "textures/npc/" + this.entityData.get(SKIN_NAME) + ".png");
+        if (this.entityData.get(NPC_NAME).matches("^[-a-z0-9._]+")) {
+            return new ResourceLocation(LegendOfTheGreatLake.SKIN_NS, "textures/npc/" + this.entityData.get(NPC_NAME) + ".png");
         }
         return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/custom_npc.png");
     }
@@ -99,20 +104,20 @@ public class CustomNPC extends Villager {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        String name = tag.getString("SkinName");
-        this.entityData.set(SKIN_NAME, name.isEmpty() ? "custom_npc" : name);
+        String name = tag.getString("NPCName");
+        this.entityData.set(NPC_NAME, name.isEmpty() ? "custom_npc" : name);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putString("SkinName", this.entityData.get(SKIN_NAME));
+        tag.putString("NPCName", this.entityData.get(NPC_NAME));
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SKIN_NAME, "custom_npc");
+        this.entityData.define(NPC_NAME, "custom_npc");
     }
 
 }

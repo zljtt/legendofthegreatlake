@@ -6,21 +6,20 @@ import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
 
 public class VillagerScheduleScreen extends AbstractContainerScreen<VillagerScheduleContainer> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/gui/villager_schedule.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/gui/villager_schedule_advanced.png");
     private ExtendedButton confirmButton;
 
     public VillagerScheduleScreen(VillagerScheduleContainer container, Inventory inventory, Component component) {
-        super(container, inventory, new TextComponent("Villager Scheduler"));
+        super(container, inventory, component);
         this.leftPos = 0;
         this.topPos = 0;
         this.imageWidth = 176;
-        this.imageHeight = 133;
+        this.imageHeight = 166;
     }
 
     @Override
@@ -40,7 +39,9 @@ public class VillagerScheduleScreen extends AbstractContainerScreen<VillagerSche
 
     @Override
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        //drawString(stack, this.font, this.title, this.leftPos + 8, this.topPos + 3, 0x404040);
+
+        int mid = 26 + (172 - 26) / 2 - this.font.width(this.title) / 2;
+        drawString(stack, this.font, this.title, mid, 8, 0x404040);
         //drawString(stack, this.font, this.playerInventoryTitle, this.leftPos + 8, this.leftPos + 80, 0x404040);
     }
 

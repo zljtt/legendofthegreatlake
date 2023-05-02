@@ -8,5 +8,8 @@
   "item.legendofthegreatlake.schedule_work": "WORK",
   "item.legendofthegreatlake.schedule_rest": "REST",
   "item.legendofthegreatlake.schedule_meet": "MEET",
-  "entity.legendofthegreatlake.custom_npc": "Custom NPC"
+  "entity.legendofthegreatlake.custom_npc": "Custom NPC",
+  "npc.custom_npc.name": "Custom NPC",
+  "npc.custom_npc.dialog": "Hello!",
+  "itemGroup.legendofthegreatlake": "Legends of the Great Lake"
 }

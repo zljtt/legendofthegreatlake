@@ -12,9 +12,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
@@ -26,23 +26,32 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 
 public class EventHandler {
     @SubscribeEvent
     public static void openVillagerScheduler(PlayerInteractEvent.EntityInteract event) {
-        if (!event.getWorld().isClientSide && event.getTarget() instanceof Villager villager && event.getPlayer().getItemInHand(event.getHand()).getItem() == ItemRegistry.DEBUG_STICK.get()) {
-            villager.getCapability(VillagerScheduleProvider.VILLAGER_SCHEDULE_CAPABILITY).ifPresent((slots) -> {
-                villager.setPersistenceRequired();
-                MenuProvider container = new SimpleMenuProvider(VillagerScheduleContainer.getServerContainer(villager, slots), new TextComponent("Scheduler"));
-                NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
+        if (!event.getWorld().isClientSide && event.getTarget() instanceof CustomNPC npc) {
+            ItemStack itemInHand = event.getPlayer().getItemInHand(event.getHand());
+            if (itemInHand.getItem() == ItemRegistry.DEBUG_STICK.get()) {
+                npc.getCapability(VillagerScheduleProvider.VILLAGER_SCHEDULE_CAPABILITY).ifPresent((slots) -> {
+                    npc.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((equipment) -> {
+                        npc.setPersistenceRequired();
+                        MenuProvider container = new SimpleMenuProvider(VillagerScheduleContainer.getServerContainer(npc, slots, equipment), npc.getTranslatedName());
+                        NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
+                        event.setResult(Event.Result.DENY);
+                    });
+                });
+            } else if (itemInHand.getItem() == ItemRegistry.SKIN_TAG.get()) {
+                npc.setCustomNPCName(itemInHand.getHoverName().getString());
+                LegendOfTheGreatLake.LOGGER.debug("Set Name to " + itemInHand.getHoverName().getString());
                 event.setResult(Event.Result.DENY);
-            });
-        }
-        if (event.getTarget() instanceof CustomNPC npc && event.getPlayer().getItemInHand(event.getHand()).getItem() == ItemRegistry.SKIN_TAG.get()) {
-            npc.setSkinName(event.getPlayer().getItemInHand(event.getHand()).getHoverName().getString());
-            LegendOfTheGreatLake.LOGGER.debug("Set to name " + event.getPlayer().getItemInHand(event.getHand()).getHoverName().getString());
-            LegendOfTheGreatLake.LOGGER.debug(npc.getStringUUID() + " " + npc.GetSkinName());
+            } else if (itemInHand.getItem() == Items.NAME_TAG) {
+                npc.setCustomNPCName(itemInHand.getHoverName().getString());
+                LegendOfTheGreatLake.LOGGER.debug("Set Name to " + itemInHand.getHoverName().getString());
+                event.setResult(Event.Result.DENY);
+            }
         }
     }
 
@@ -55,7 +64,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void addVillagerSchedule(AttachCapabilitiesEvent<Entity> event) {
-        if (!event.getObject().level.isClientSide && event.getObject() instanceof Villager villager) {
+        if (!event.getObject().level.isClientSide && event.getObject() instanceof CustomNPC npc) {
             event.addCapability(new ResourceLocation(LegendOfTheGreatLake.MODID, "villager_schedule"), new VillagerScheduleProvider());
         }
     }
@@ -79,18 +88,15 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void transformVillager(EntityJoinWorldEvent event) {
-        if (!event.getEntity().level.isClientSide && event.getEntity() instanceof Villager villager) {
-            VillagerModifiedAI.transformVillager(villager);
-
+        if (!event.getEntity().level.isClientSide && event.getEntity() instanceof CustomNPC npc) {
+            //VillagerModifiedAI.transformVillager(npc);
         }
     }
 
     @SubscribeEvent
     public static void updateVillager(LivingEvent.LivingUpdateEvent event) {
-        if (!event.getEntityLiving().level.isClientSide && event.getEntityLiving() instanceof Villager villager) {
-            VillagerModifiedAI.updateVillagerSchedule(villager);
-
-
+        if (!event.getEntityLiving().level.isClientSide && event.getEntityLiving() instanceof CustomNPC npc) {
+            VillagerModifiedAI.updateVillagerSchedule(npc);
         }
     }
 

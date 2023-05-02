@@ -15,20 +15,33 @@ public class VillagerScheduleContainer extends AbstractContainerMenu {
     //private final ContainerLevelAccess containerLevelAccess;
 
     public VillagerScheduleContainer(int id, Inventory inventory) {
-        this(id, inventory, new ItemStackHandler(6), null);
+        this(id, inventory, new ItemStackHandler(6), new ItemStackHandler(6), null);
     }
 
-    public VillagerScheduleContainer(int id, Inventory inventory, IItemHandler slots, Villager villager) {
+    public VillagerScheduleContainer(int id, Inventory inventory, IItemHandler schedule, IItemHandler equipment, Villager villager) {
         super(ContainerRegistry.VILLAGER_SCHEDULE.get(), id);
-        int slotSize = 18, invX = 8, invY = 51, hotbarY = 109, contentX = 35, contentY = 20;
+        int slotSize = 18;
+        int equipmentX = 8, equipmentY = 8;
+        int handX = 35, handY = 44;
+        int scheduleX = 62, scheduleY = 62;
+        int invX = 8, invY = 84;
+        int hotbarY = 142;
         for (int column = 0; column < 9; column++) {
             for (int row = 0; row < 3; row++) {
                 addSlot(new Slot(inventory, 9 + row * 9 + column, invX + column * slotSize, invY + row * slotSize));
             }
             addSlot(new Slot(inventory, column, invX + column * slotSize, hotbarY));
         }
-        for (int column = 0; column < slots.getSlots(); column++) {
-            addSlot(new SlotItemHandler(slots, column, contentX + column * slotSize, contentY));
+        addSlot(new SlotItemHandler(equipment, 0, handX, handY));
+        addSlot(new SlotItemHandler(equipment, 1, handX, handY + slotSize));
+
+        addSlot(new SlotItemHandler(equipment, 5, equipmentX, equipmentY + 0 * slotSize));
+        addSlot(new SlotItemHandler(equipment, 4, equipmentX, equipmentY + 1 * slotSize));
+        addSlot(new SlotItemHandler(equipment, 3, equipmentX, equipmentY + 2 * slotSize));
+        addSlot(new SlotItemHandler(equipment, 2, equipmentX, equipmentY + 3 * slotSize));
+
+        for (int column = 0; column < schedule.getSlots(); column++) {
+            addSlot(new SlotItemHandler(schedule, column, scheduleX + column * slotSize, scheduleY));
         }
         //this.containerLevelAccess = ContainerLevelAccess.create(playerInv.player.level, pos);
     }
@@ -69,7 +82,7 @@ public class VillagerScheduleContainer extends AbstractContainerMenu {
         //return stillValid(this.containerLevelAccess, player, );
     }
 
-    public static MenuConstructor getServerContainer(Villager villager, IItemHandler slots) {
-        return (id, playerInv, player) -> new VillagerScheduleContainer(id, playerInv, slots, villager);
+    public static MenuConstructor getServerContainer(Villager villager, IItemHandler slots, IItemHandler equipment) {
+        return (id, playerInv, player) -> new VillagerScheduleContainer(id, playerInv, slots, equipment, villager);
     }
 }

@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,11 +37,11 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
 
     public CustomNPCRenderer(EntityRendererProvider.Context context, boolean slim) {
         super(context, new CustomNPCModel<>(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5F);
-        /**
-         this.addLayer(new HumanoidArmorLayer<>(this,
-         new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
-         **/
-        //this.addLayer(new PlayerItemInHandLayer<>(this));
+
+        this.addLayer(new HumanoidArmorLayer<>(this,
+                new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
+
+        this.addLayer(new ItemInHandLayer<>(this));
         //this.addLayer(new ArrowLayer<>(context, this));
         //this.addLayer(new Deadmau5EarsLayer(this));
         //this.addLayer(new CapeLayer(this));
@@ -76,6 +78,12 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
              npcModel.leftSleeve.visible = npc.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
              npcModel.rightSleeve.visible = npc.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
              **/
+            npcModel.hat.visible = true;
+            npcModel.jacket.visible = true;
+            npcModel.leftPants.visible = true;
+            npcModel.rightPants.visible = true;
+            npcModel.leftSleeve.visible = true;
+            npcModel.rightSleeve.visible = true;
             npcModel.crouching = npc.isCrouching();
             HumanoidModel.ArmPose humanoidmodel$armpose = getArmPose(npc, InteractionHand.MAIN_HAND);
             HumanoidModel.ArmPose humanoidmodel$armpose1 = getArmPose(npc, InteractionHand.OFF_HAND);
@@ -138,6 +146,8 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
     }
 
     protected void renderNameTag(CustomNPC npc, Component component, PoseStack stack, MultiBufferSource buffer, int p_117812_) {
+        super.renderNameTag(npc, npc.getTranslatedName(), stack, buffer, p_117812_);
+
         /**
          double d0 = this.entityRenderDispatcher.distanceToSqr(npc);
          stack.pushPose();
