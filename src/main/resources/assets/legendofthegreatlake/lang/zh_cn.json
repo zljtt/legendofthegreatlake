@@ -10,6 +10,7 @@
   "item.legendofthegreatlake.schedule_meet": "娱乐",
   "entity.legendofthegreatlake.custom_npc": "自定义NPC",
   "npc.custom_npc.name": "自定义NPC",
-  "npc.custom_npc.dialog": "你好！",
+  "npc.custom_npc.dialog": "。。。",
+  "npc.default_dialog": "。。。",
   "itemGroup.legendofthegreatlake": "大湖洲传奇"
 }

@@ -3,10 +3,12 @@ package github.zljtt.legendofthegreatlake;
 import github.zljtt.legendofthegreatlake.capabilities.*;
 import github.zljtt.legendofthegreatlake.entity.CustomNPC;
 import github.zljtt.legendofthegreatlake.entity.VillagerModifiedAI;
+import github.zljtt.legendofthegreatlake.gui.VillagerDialogContainer;
 import github.zljtt.legendofthegreatlake.gui.VillagerScheduleContainer;
 import github.zljtt.legendofthegreatlake.items.ItemRegistry;
 import github.zljtt.legendofthegreatlake.items.ScheduledEvent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -38,7 +40,7 @@ public class EventHandler {
                 npc.getCapability(VillagerScheduleProvider.VILLAGER_SCHEDULE_CAPABILITY).ifPresent((slots) -> {
                     npc.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((equipment) -> {
                         npc.setPersistenceRequired();
-                        MenuProvider container = new SimpleMenuProvider(VillagerScheduleContainer.getServerContainer(npc, slots, equipment), npc.getTranslatedName());
+                        MenuProvider container = new SimpleMenuProvider(VillagerScheduleContainer.getServerContainer(npc, slots, equipment), new TranslatableComponent("npc." + npc.getCustomNPCName() + ".name"));
                         NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
                         event.setResult(Event.Result.DENY);
                     });
@@ -50,6 +52,10 @@ public class EventHandler {
             } else if (itemInHand.getItem() == Items.NAME_TAG) {
                 npc.setCustomNPCName(itemInHand.getHoverName().getString());
                 LegendOfTheGreatLake.LOGGER.debug("Set Name to " + itemInHand.getHoverName().getString());
+                event.setResult(Event.Result.DENY);
+            } else {
+                MenuProvider container = new SimpleMenuProvider(VillagerDialogContainer.getServerContainer(npc), new TranslatableComponent("npc." + npc.getCustomNPCName()));
+                NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
                 event.setResult(Event.Result.DENY);
             }
         }

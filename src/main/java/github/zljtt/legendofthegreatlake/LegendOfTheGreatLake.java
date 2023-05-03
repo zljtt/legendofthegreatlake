@@ -3,7 +3,7 @@ package github.zljtt.legendofthegreatlake;
 import com.mojang.logging.LogUtils;
 import github.zljtt.legendofthegreatlake.entity.CustomNPC;
 import github.zljtt.legendofthegreatlake.entity.EntityRegistry;
-import github.zljtt.legendofthegreatlake.gui.ContainerRegistry;
+import github.zljtt.legendofthegreatlake.gui.MenuRegistry;
 import github.zljtt.legendofthegreatlake.items.ItemRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +43,7 @@ public class LegendOfTheGreatLake {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(EventHandler.class);
         ItemRegistry.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ContainerRegistry.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        MenuRegistry.MENUS.register(FMLJavaModLoadingContext.get().getModEventBus());
         EntityRegistry.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
     }

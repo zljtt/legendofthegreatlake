@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,14 +21,15 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 public class CustomNPC extends Villager {
-
     private static final EntityDataAccessor<String> NPC_NAME =
             SynchedEntityData.defineId(CustomNPC.class, EntityDataSerializers.STRING);
 
     public CustomNPC(EntityType<? extends Villager> type, Level level) {
         super(type, level);
+        this.setPathfindMaluses();
     }
 
     public static AttributeSupplier setAttributes() {
@@ -55,9 +55,6 @@ public class CustomNPC extends Villager {
         return this.entityData.get(NPC_NAME);
     }
 
-    public TranslatableComponent getTranslatedName() {
-        return new TranslatableComponent("npc." + this.entityData.get(NPC_NAME) + ".name");
-    }
 
     @Override
     public void refreshBrain(ServerLevel level) {
@@ -94,11 +91,48 @@ public class CustomNPC extends Villager {
         LegendOfTheGreatLake.LOGGER.debug("Custom npc AI generated");
     }
 
+    private void setPathfindMaluses() {
+        this.setPathfindingMalus(BlockPathTypes.TRAPDOOR, -1);
+        /**
+         this.setPathfindingMalus(BlockPathTypes.BLOCKED, -1);
+         this.setPathfindingMalus(BlockPathTypes.OPEN, 0);
+         this.setPathfindingMalus(BlockPathTypes.DOOR_OPEN, 0);
+         this.setPathfindingMalus(BlockPathTypes.DOOR_WOOD_CLOSED, 0);
+         this.setPathfindingMalus(BlockPathTypes.WALKABLE, 0);
+         this.setPathfindingMalus(BlockPathTypes.WALKABLE_DOOR, 0);
+         this.setPathfindingMalus(BlockPathTypes.RAIL, 0);
+         this.setPathfindingMalus(BlockPathTypes.BREACH, 4);
+         this.setPathfindingMalus(BlockPathTypes.WATER, 8);
+         this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 8);
+         this.setPathfindingMalus(BlockPathTypes.DOOR_IRON_CLOSED, -1);
+         this.setPathfindingMalus(BlockPathTypes.TRAPDOOR, -1);
+         this.setPathfindingMalus(BlockPathTypes.POWDER_SNOW, -1);
+         this.setPathfindingMalus(BlockPathTypes.DANGER_POWDER_SNOW, -1);
+         this.setPathfindingMalus(BlockPathTypes.FENCE, -1);
+         this.setPathfindingMalus(BlockPathTypes.LAVA, -1);
+         this.setPathfindingMalus(BlockPathTypes.UNPASSABLE_RAIL, -1);
+         this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1);
+         this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1);
+         this.setPathfindingMalus(BlockPathTypes.DANGER_CACTUS, -1);
+         this.setPathfindingMalus(BlockPathTypes.DAMAGE_CACTUS, -1);
+         this.setPathfindingMalus(BlockPathTypes.DANGER_OTHER, -1);
+         this.setPathfindingMalus(BlockPathTypes.DAMAGE_OTHER, -1);
+         this.setPathfindingMalus(BlockPathTypes.LEAVES, -1);
+         this.setPathfindingMalus(BlockPathTypes.STICKY_HONEY, -1);
+         this.setPathfindingMalus(BlockPathTypes.COCOA, -1);
+         **/
+    }
+
     public ResourceLocation getSkinTextureLocation() {
         if (this.entityData.get(NPC_NAME).matches("^[-a-z0-9._]+")) {
             return new ResourceLocation(LegendOfTheGreatLake.SKIN_NS, "textures/npc/" + this.entityData.get(NPC_NAME) + ".png");
         }
         return new ResourceLocation(LegendOfTheGreatLake.MODID, "textures/npc/custom_npc.png");
+    }
+
+    @Override
+    public float getPathfindingMalus(BlockPathTypes p_21440_) {
+        return super.getPathfindingMalus(p_21440_);
     }
 
     @Override

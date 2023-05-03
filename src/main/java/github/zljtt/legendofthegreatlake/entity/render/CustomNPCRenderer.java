@@ -12,10 +12,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.ArrowLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -42,7 +44,7 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
                 new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(context.bakeLayer(slim ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
 
         this.addLayer(new ItemInHandLayer<>(this));
-        //this.addLayer(new ArrowLayer<>(context, this));
+        this.addLayer(new ArrowLayer<>(context, this));
         //this.addLayer(new Deadmau5EarsLayer(this));
         //this.addLayer(new CapeLayer(this));
         //this.addLayer(new CustomHeadLayer<>(this, context.getModelSet()));
@@ -146,7 +148,28 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
     }
 
     protected void renderNameTag(CustomNPC npc, Component component, PoseStack stack, MultiBufferSource buffer, int p_117812_) {
-        super.renderNameTag(npc, npc.getTranslatedName(), stack, buffer, p_117812_);
+        /**
+         double d0 = this.entityRenderDispatcher.distanceToSqr(npc);
+         if (net.minecraftforge.client.ForgeHooksClient.isNameplateInRenderDistance(npc, d0)) {
+         float f = npc.getBbHeight() + 0.5F;
+         stack.pushPose();
+         Font font = this.getFont();
+         stack.translate(0.0D, f + 0.5D, 0.0D);
+         stack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+         stack.scale(-0.025F, -0.025F, 0.025F);
+         Matrix4f matrix4f = stack.last().pose();
+         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
+         int j = (int) (f1 * 255.0F) << 24;
+         TranslatableComponent dialog = npc.getDialog();
+         float f2 = (float) (-font.width(dialog) / 2);
+
+         font.drawInBatch(dialog, f2, (float) 0, 553648127, false, matrix4f, buffer, true, j, p_117812_);
+         font.drawInBatch(dialog, f2, (float) 0, -1, false, matrix4f, buffer, false, 0, p_117812_);
+
+         stack.popPose();
+         }
+         **/
+        super.renderNameTag(npc, new TranslatableComponent("npc." + npc.getCustomNPCName() + ".name"), stack, buffer, p_117812_);
 
         /**
          double d0 = this.entityRenderDispatcher.distanceToSqr(npc);

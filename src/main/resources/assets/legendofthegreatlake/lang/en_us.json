@@ -10,6 +10,7 @@
   "item.legendofthegreatlake.schedule_meet": "MEET",
   "entity.legendofthegreatlake.custom_npc": "Custom NPC",
   "npc.custom_npc.name": "Custom NPC",
-  "npc.custom_npc.dialog": "Hello!",
+  "npc.custom_npc.dialog": "...",
+  "npc.default_dialog": "...",
   "itemGroup.legendofthegreatlake": "Legends of the Great Lake"
 }

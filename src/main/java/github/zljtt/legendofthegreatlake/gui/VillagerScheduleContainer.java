@@ -19,7 +19,7 @@ public class VillagerScheduleContainer extends AbstractContainerMenu {
     }
 
     public VillagerScheduleContainer(int id, Inventory inventory, IItemHandler schedule, IItemHandler equipment, Villager villager) {
-        super(ContainerRegistry.VILLAGER_SCHEDULE.get(), id);
+        super(MenuRegistry.VILLAGER_SCHEDULE.get(), id);
         int slotSize = 18;
         int equipmentX = 8, equipmentY = 8;
         int handX = 35, handY = 44;

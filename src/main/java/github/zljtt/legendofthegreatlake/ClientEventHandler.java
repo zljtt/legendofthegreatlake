@@ -2,7 +2,8 @@ package github.zljtt.legendofthegreatlake;
 
 import github.zljtt.legendofthegreatlake.entity.EntityRegistry;
 import github.zljtt.legendofthegreatlake.entity.render.CustomNPCRenderer;
-import github.zljtt.legendofthegreatlake.gui.ContainerRegistry;
+import github.zljtt.legendofthegreatlake.gui.MenuRegistry;
+import github.zljtt.legendofthegreatlake.gui.VillagerDialogScreen;
 import github.zljtt.legendofthegreatlake.gui.VillagerScheduleScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,7 +17,10 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MenuScreens.register(ContainerRegistry.VILLAGER_SCHEDULE.get(), VillagerScheduleScreen::new));
+        event.enqueueWork(() -> {
+            MenuScreens.register(MenuRegistry.VILLAGER_SCHEDULE.get(), VillagerScheduleScreen::new);
+            MenuScreens.register(MenuRegistry.VILLAGER_DIALOG.get(), VillagerDialogScreen::new);
+        });
     }
 
     @SubscribeEvent
