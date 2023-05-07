@@ -1,0 +1,8 @@
+{
+    "pack": {
+        "description": "The custom resource pack for the Legend of the Great Lake",
+        "pack_format": 9,
+        "forge:resource_pack_format": 8,
+        "forge:data_pack_format": 9
+    }
+}

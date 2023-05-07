@@ -1,0 +1,24 @@
+{
+  "name": "测试人员 1",
+  "dialogs": {
+    "dialog": "有什么我可以帮你的吗？",
+    "dialog.option1": "可以给我整点薯条吗？",
+    "dialog.option1.dialog": "薯条是什么？",
+    "dialog.option1.option1": "你是傻逼吗连薯条是什么都不知道",
+    "dialog.option1.option1.dialog": "你说的对，但是原神是。。。后面忘了",
+    "dialog.option1.option2": "薯条是用土豆切条油炸成的零食",
+    "dialog.option1.option2.dialog": "我们只有烤土豆",
+    "dialog.option2": "可以帮我找钻石吗？",
+    "dialog.option2.dialog": "没有钻石捏，只有绿宝石",
+    "dialog.option3": "来给我讲个故事吧！",
+    "dialog.option3.require": {
+      "level": 10,
+      "quest": "quest1"
+    },
+    "dialog.option3.dialog": "从前有座山，山里有座庙。。。",
+    "dialog.option3.option1": "继续",
+    "dialog.option3.option1.dialog": "庙里有个小和尚。。。",
+    "dialog.option3.option1.option1": "继续",
+    "dialog.option3.option1.option1.dialog": "。。。"
+  }
+}
