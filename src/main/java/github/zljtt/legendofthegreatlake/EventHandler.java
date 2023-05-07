@@ -7,6 +7,7 @@ import github.zljtt.legendofthegreatlake.gui.VillagerDialogContainer;
 import github.zljtt.legendofthegreatlake.gui.VillagerScheduleContainer;
 import github.zljtt.legendofthegreatlake.items.ItemRegistry;
 import github.zljtt.legendofthegreatlake.items.ScheduledEvent;
+import github.zljtt.legendofthegreatlake.quests.QuestManager;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -20,18 +21,35 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 
 public class EventHandler {
+
+
+    @SubscribeEvent
+    public static void reloadData(AddReloadListenerEvent event) {
+        LegendOfTheGreatLake.LOGGER.info("Register server pack loader");
+        event.addListener(new QuestManager.QuestLoader());
+    }
+
+    @SubscribeEvent
+    public static void saveQuests(WorldEvent.Save event) {
+        if (!event.getWorld().isClientSide()) {
+            QuestManager.getInstance().Save();
+        }
+    }
+
     @SubscribeEvent
     public static void openVillagerScheduler(PlayerInteractEvent.EntityInteract event) {
         if (!event.getWorld().isClientSide && event.getTarget() instanceof CustomNPC npc) {
@@ -54,7 +72,7 @@ public class EventHandler {
                 LegendOfTheGreatLake.LOGGER.debug("Set Name to " + itemInHand.getHoverName().getString());
                 event.setResult(Event.Result.DENY);
             } else {
-                MenuProvider container = new SimpleMenuProvider(VillagerDialogContainer.getServerContainer(npc), new TranslatableComponent("npc." + npc.getCustomNPCName()));
+                MenuProvider container = new SimpleMenuProvider(VillagerDialogContainer.getServerContainer(npc), new TextComponent(npc.getCustomNPCName()));
                 NetworkHooks.openGui((ServerPlayer) event.getPlayer(), container, event.getPos());
                 event.setResult(Event.Result.DENY);
             }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import github.zljtt.legendofthegreatlake.entity.CustomNPC;
 import github.zljtt.legendofthegreatlake.entity.model.CustomNPCModel;
+import github.zljtt.legendofthegreatlake.npc.ClientNPCManager;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -17,7 +18,7 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -169,7 +170,7 @@ public class CustomNPCRenderer extends LivingEntityRenderer<CustomNPC, CustomNPC
          stack.popPose();
          }
          **/
-        super.renderNameTag(npc, new TranslatableComponent("npc." + npc.getCustomNPCName() + ".name"), stack, buffer, p_117812_);
+        super.renderNameTag(npc, new TextComponent(ClientNPCManager.getInstance().getName(npc.getCustomNPCName())), stack, buffer, p_117812_);
 
         /**
          double d0 = this.entityRenderDispatcher.distanceToSqr(npc);

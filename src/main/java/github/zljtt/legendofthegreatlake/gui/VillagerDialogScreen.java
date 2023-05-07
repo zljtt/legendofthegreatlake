@@ -3,15 +3,15 @@ package github.zljtt.legendofthegreatlake.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import github.zljtt.legendofthegreatlake.LegendOfTheGreatLake;
+import github.zljtt.legendofthegreatlake.npc.ClientNPCManager;
+import github.zljtt.legendofthegreatlake.npc.Dialog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,16 +24,16 @@ public class VillagerDialogScreen extends AbstractContainerScreen<VillagerDialog
 
     public static final int OPTION_MAX = 3;
     protected OptionButton[] options = new OptionButton[OPTION_MAX];
-    private String dialogLevel = "";
-    private TranslatableComponent npcName;
+    private Dialog currentDialog;
+    private TextComponent npcName;
 
     public VillagerDialogScreen(VillagerDialogContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);
         this.imageWidth = 256;
         this.imageHeight = 50;
-        this.resetDialog();
-        if (this.title instanceof TranslatableComponent name) {
-            this.npcName = new TranslatableComponent(name.getKey() + ".name");
+        if (this.title instanceof TextComponent name) {
+            this.npcName = new TextComponent(ClientNPCManager.getInstance().getName(name.getText()));
+            this.currentDialog = ClientNPCManager.getInstance().getDialog(name.getText());
         }
     }
 
@@ -43,22 +43,20 @@ public class VillagerDialogScreen extends AbstractContainerScreen<VillagerDialog
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = this.height - this.imageHeight - 30;
         this.createOptionButtons();
-        this.refreshOptions();
     }
 
     protected void createOptionButtons() {
         int optionX = this.leftPos + 3;
         int optionHeight = 22 + 3;
         int optionY = this.topPos;
-        this.options[0] = this.addRenderableWidget(new OptionButton(optionX, optionY - optionHeight, 126, 22, (button) -> {
-            this.selectDialogOption(0);
-        }));
-        this.options[1] = this.addRenderableWidget(new OptionButton(optionX, optionY - 2 * optionHeight, 166, 22, (button) -> {
-            this.selectDialogOption(1);
-        }));
-        this.options[2] = this.addRenderableWidget(new OptionButton(optionX, optionY - 3 * optionHeight, 166, 22, (button) -> {
-            this.selectDialogOption(2);
-        }));
+        for (int i = 0; i < this.options.length; i++) {
+            this.removeWidget(this.options[i]);
+        }
+        List<Dialog.Option> dialogOptions = this.currentDialog.getVisibleOptions();
+        this.options = new OptionButton[dialogOptions.size()];
+        for (int i = 0; i < this.currentDialog.getVisibleOptions().size(); i++) {
+            this.options[i] = this.addRenderableWidget(new OptionButton(optionX, optionY - (i + 1) * optionHeight, 126, 22, this::onButtonSelect, dialogOptions.get(i)));
+        }
     }
 
     @Override
@@ -78,82 +76,40 @@ public class VillagerDialogScreen extends AbstractContainerScreen<VillagerDialog
 
     @Override
     protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
-        String dialog = this.getDialog();
         this.font.draw(stack, npcName.withStyle(npcName.getStyle().withBold(true)), 15, 10, 0x404040);
-        if (I18n.exists(dialog)) { // 21 - 39
-            List<FormattedCharSequence> paragraph = this.font.split(new TranslatableComponent(dialog), 210);
-            int k = Math.min(2, paragraph.size());
-            int paragraphHeight = k * 8 + (k - 1) * 2;
-            int paragraphY = 21 + (18 - paragraphHeight) / 2;
-            for (int l = 0; l < k; ++l) {
-                FormattedCharSequence formattedcharsequence = paragraph.get(l);
-                this.font.draw(stack, formattedcharsequence, 15, paragraphY + l * 10, 0x404040);
-            }
-        } else {
-            this.font.draw(stack, new TranslatableComponent("npc.default_dialog"), 15, 25, 0x404040);
+        List<FormattedCharSequence> paragraph = this.font.split(new TextComponent(this.currentDialog.getDialog()), 210);
+        int k = Math.min(2, paragraph.size());
+        int paragraphHeight = k * 8 + (k - 1) * 2;
+        int paragraphY = 21 + (18 - paragraphHeight) / 2;
+        for (int l = 0; l < k; ++l) {
+            FormattedCharSequence formattedcharsequence = paragraph.get(l);
+            this.font.draw(stack, formattedcharsequence, 15, paragraphY + l * 10, 0x404040);
         }
         //this.cachedPageComponents = this.font.split(formattedtext, 114);
 
     }
 
-    @Override
-    public void onClose() {
-        this.resetDialog();
-        super.onClose();
-    }
-
-    void selectDialogOption(int option) {
-        this.progressDialog(option);
-        this.refreshOptions();
-        LegendOfTheGreatLake.LOGGER.debug("dialog level " + this.dialogLevel);
-    }
-
-    void refreshOptions() {
-        for (int i = 0; i < OPTION_MAX; i++) {
-            String rl = this.getDialogOption(i);
-            if (I18n.exists(rl)) {
-                this.options[i].visible = true;
-                this.options[i].setMessage(new TranslatableComponent(rl).withStyle(npcName.getStyle().withBold(true)));
-            } else {
-                this.options[i].visible = false;
-            }
-        }
-    }
-
-
-    public String getDialog() {
-        if (dialogLevel == null || dialogLevel.isEmpty()) {
-            this.resetDialog();
-        }
-        return this.dialogLevel + ".dialog";
-    }
-
-    public String getDialogOption(int option) {
-        if (dialogLevel == null || dialogLevel.isEmpty()) {
-            this.resetDialog();
-        }
-        return this.dialogLevel + ".option" + (option + 1);
-    }
-
-    public void progressDialog(int option) {
-        if (dialogLevel == null || dialogLevel.isEmpty()) {
-            this.resetDialog();
-        }
-        this.dialogLevel += ".option" + (option + 1);
-    }
-
-    public void resetDialog() {
-        if (this.title instanceof TranslatableComponent name) {
-            this.dialogLevel = name.getKey();
+    void onButtonSelect(Button option) {
+        if (option instanceof OptionButton optionButton) {
+            this.currentDialog = optionButton.getNext();
+            this.createOptionButtons();
+            LegendOfTheGreatLake.LOGGER.debug("Select to new dialog " + this.currentDialog.toJson());
         }
     }
 
     public static class OptionButton extends Button {
+        private final Dialog.Option option;
 
-        public OptionButton(int x, int y, int width, int height, OnPress onPress) {
+        public OptionButton(int x, int y, int width, int height, OnPress onPress, Dialog.Option nextedOption) {
             super(x, y, width, height, TextComponent.EMPTY, onPress);
+            this.option = nextedOption;
+            TextComponent text = new TextComponent(nextedOption.getText());
+            this.setMessage(text.withStyle(text.getStyle().withBold(true)));
         }
 
+        public Dialog getNext() {
+            return option.getNext();
+        }
 
         @Override
         public void renderButton(PoseStack stack, int mouseX, int mouseY, float particleTick) {
