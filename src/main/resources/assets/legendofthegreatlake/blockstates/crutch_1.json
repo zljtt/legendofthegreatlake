@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "legendofthegreatlake:block/crutch_1",
+      "y": 0
+    },
+    "facing=north": {
+      "model": "legendofthegreatlake:block/crutch_1",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "legendofthegreatlake:block/crutch_1",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "legendofthegreatlake:block/crutch_1",
+      "y": 180
+    }
+  }
+}

@@ -8,9 +8,11 @@
   "item.legendofthegreatlake.schedule_work": "WORK",
   "item.legendofthegreatlake.schedule_rest": "REST",
   "item.legendofthegreatlake.schedule_meet": "MEET",
+  "block.legendofthegreatlake.tobacco_pipe": "Tobacco Pipe",
   "entity.legendofthegreatlake.custom_npc": "Custom NPC",
   "npc.custom_npc.name": "Custom NPC",
   "npc.custom_npc.dialog": "...",
   "npc.default_dialog": "...",
-  "itemGroup.legendofthegreatlake": "Legends of the Great Lake"
+  "itemGroup.legendofthegreatlake.item": "Legends of the Great Lake Items",
+  "itemGroup.legendofthegreatlake.block": "Legends of the Great Lake Blocks"
 }

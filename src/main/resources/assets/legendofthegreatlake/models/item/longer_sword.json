@@ -1,0 +1,91 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "1": "longer_sword",
+    "layer0": "legendofthegreatlake:item/longer_sword",
+    "particle": "longer_sword"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        90,
+        24
+      ],
+      "translation": [
+        0,
+        12,
+        -4
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        -90,
+        -24
+      ],
+      "translation": [
+        0,
+        12,
+        -4
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.25,
+        12,
+        6
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.25,
+        12,
+        6
+      ],
+      "scale": [
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "longer_sword",
+      "origin": [
+        8,
+        8,
+        8
+      ],
+      "color": 0,
+      "children": []
+    }
+  ]
+}

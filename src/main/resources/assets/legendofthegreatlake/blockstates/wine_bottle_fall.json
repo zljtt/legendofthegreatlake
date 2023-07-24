@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "legendofthegreatlake:block/wine_bottle_fall",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "legendofthegreatlake:block/wine_bottle_fall"
+    },
+    "facing=south": {
+      "model": "legendofthegreatlake:block/wine_bottle_fall",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "legendofthegreatlake:block/wine_bottle_fall",
+      "y": 270
+    }
+  }
+}

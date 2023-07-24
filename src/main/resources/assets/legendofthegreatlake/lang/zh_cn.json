@@ -12,5 +12,16 @@
   "npc.custom_npc.name": "自定义NPC",
   "npc.custom_npc.dialog": "。。。",
   "npc.default_dialog": "。。。",
-  "itemGroup.legendofthegreatlake": "大湖洲传奇"
+  "itemGroup.legendofthegreatlake": "大湖洲传奇",
+  "itemGroup.legendofthegreatlake.item": "大湖洲传奇 物品",
+  "itemGroup.legendofthegreatlake.block": "大湖洲传奇 方块",
+  "block.legendofthegreatlake.tobacco_pipe": "烟斗",
+  "block.legendofthegreatlake.crutch_1": "拐杖",
+  "block.legendofthegreatlake.crutch_2": "拐杖",
+  "block.legendofthegreatlake.frame_ground": "相框（地面）",
+  "block.legendofthegreatlake.frame_wall": "相框（墙）",
+  "block.legendofthegreatlake.glasses": "眼镜",
+  "block.legendofthegreatlake.hanger": "落地衣架",
+  "block.legendofthegreatlake.pocket_watch": "怀表",
+  "block.legendofthegreatlake.wine_bottle_fall": "酒瓶（横置）"
 }

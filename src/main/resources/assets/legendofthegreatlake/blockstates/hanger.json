@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "legendofthegreatlake:block/hanger",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "legendofthegreatlake:block/hanger"
+    },
+    "facing=south": {
+      "model": "legendofthegreatlake:block/hanger",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "legendofthegreatlake:block/hanger",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "legendofthegreatlake:block/pocket_watch",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "legendofthegreatlake:block/pocket_watch"
+    },
+    "facing=south": {
+      "model": "legendofthegreatlake:block/pocket_watch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "legendofthegreatlake:block/pocket_watch",
+      "y": 270
+    }
+  }
+}
